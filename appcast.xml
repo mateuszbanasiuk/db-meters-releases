@@ -1,0 +1,59 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>DBMetersApp</title>
+        <item>
+            <title>1.0.0</title>
+            <pubDate>Mon, 20 Jul 2026 18:48:27 +0200</pubDate>
+            <sparkle:version>1.0.0</sparkle:version>
+            <sparkle:shortVersionString>1.0.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.0.0
+
+Pierwsze wydanie. Metering do 128 kanałów w osobnym procesie — nie zabiera
+focusu ani CPU sesji w Pro Tools.
+
+**Aplikacja**
+- Tryby pomiaru: True Peak, Pro Tools Classic, VU, PPM.
+- Do 128 kanałów, wejście przez Core Audio / AUHAL (BlackHole 128ch albo
+  dowolne inne urządzenie wejściowe).
+- Master Meter, RTA, peak-hold, konfigurowalne etykiety kanałów.
+- Auto-etykiety z nazw ścieżek sesji Pro Tools przez PTSL (opcjonalnie).
+- Automatyczne aktualizacje (Sparkle) — świadomie **tylko** ręczne
+  „Check for Updates…" z menu. Żadnych sprawdzeń w tle, żeby aplikacja
+  nigdy nie wyskoczyła przed Pro Toolsa w trakcie sesji.
+
+**Wtyczki (osobny plik `dB-Meters-Plugins-1.0.0.zip`)**
+- `dB Meters Tap` w formatach **VST3** i **AU** — bit-transparentny odczep
+  sygnału, zero DSP na ścieżce.
+- Podpisane Developer ID i notaryzowane przez Apple. Instalacja: przeciągnij
+  wg `INSTALL.txt` z paczki.
+- AAX **nie** wchodzi do tego wydania (wymaga podpisu PACE, którego nie mamy).
+
+### Co jest, a czego nie ma — stan weryfikacji
+
+Uczciwie, bez zaokrąglania:
+
+- **Zweryfikowane:** 245 testów automatycznych (0 błędów), aplikacja
+  przeklikana ręcznie w light i dark, AU przechodzi `auval` i własny test
+  skalowania hosta, transport wtyczka→aplikacja sprawdzony osobnym testem.
+- **NIEzweryfikowane:** mini-UI wtyczki **VST3 nigdy nie zostało potwierdzone
+  w żywym hoście** (trzy próby weryfikacji w REAPER-ze przerwano). Wtyczka
+  buduje się, ładuje i przechodzi testy jednostkowe, ale „działa w DAW-ie"
+  to na dziś oczekiwanie, nie fakt. Jeśli mini-UI nie wstaje w Twoim hoście —
+  to znany, nieprzetestowany obszar, nie regresja.
+- Instalacja sterownika BlackHole 128ch jest osobnym, ręcznym krokiem
+  (wymaga uprawnień administratora) i nie wchodzi do tej paczki.
+
+### Znane ograniczenie aktualizacji
+
+Sparkle aktualizuje **tylko aplikację**. Wtyczki VST3/AU żyją w katalogach
+systemowych i po auto-aktualizacji aplikacji zostają w starej wersji —
+trzeba je zainstalować ponownie. Kopie pasujące do zainstalowanej wersji
+aplikacji są zawsze w `dB Meters.app → Contents/PlugIns/`.
+]]></description>
+            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.0/dB-Meters-1.0.0.zip" length="2876660" type="application/octet-stream" sparkle:edSignature="3BL0SfXgPbLvTGhVtljiwUWXP/tQUj1vWqLS16ztHZoWvNOsH4j9GLRRZCTA8oBEZow/DfaySOcgz+eRDbUIBg=="/>
+        </item>
+    </channel>
+</rss>
