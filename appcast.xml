@@ -3,6 +3,81 @@
     <channel>
         <title>DBMetersApp</title>
         <item>
+            <title>1.0.1</title>
+            <pubDate>Mon, 20 Jul 2026 21:54:11 +0200</pubDate>
+            <sparkle:version>1.0.1</sparkle:version>
+            <sparkle:shortVersionString>1.0.1</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.0.1
+
+Wydanie naprawcze. **Zaktualizuj koniecznie.**
+
+### Mikrofon — w 1.0.0 nie dało się go użyć w ogóle
+
+W 1.0.0 aplikacja nie miała podpisanego uprawnienia
+`com.apple.security.device.audio-input`. Przy włączonym hardened runtime macOS
+odmawia wtedy dostępu do wejścia audio **po cichu**: nie ma pytania o zgodę, nie
+ma wpisu w Ustawieniach systemowych ▸ Prywatność ▸ Mikrofon, a każde urządzenie
+wejściowe podaje cyfrową ciszę. Wyliczanie urządzeń przez HAL nie jest tym
+objęte, więc lista wyglądała normalnie — mierniki po prostu stały w miejscu.
+Dotyczyło to każdego, kto pobrał 1.0.0.
+
+Co się zmieniło w 1.0.1:
+
+- Uprawnienie jest realnie wpisywane do podpisu (i build się wywala, jeśli go
+  zabraknie — nie da się już wypuścić niemej wersji).
+- Przy wyborze wejścia mikrofonowego aplikacja prosi o zgodę systemową, a po
+  jej udzieleniu sama wchodzi ponownie do źródła — nie trzeba klikać drugi raz.
+- Wbudowany mikrofon i mikrofon iPhone'a (Continuity) są widoczne na liście.
+- Urządzenia niedostępne nie znikają już bez słowa — zostają wyszarzone
+  **z powodem**, więc widać, czy to brak zgody, czy urządzenie zajęte.
+
+### Korelacja fazy mierzyła 4,6× za szybko
+
+Stała czasowa korelatora była przepisana z balistyki VU, gdzie 300 ms to czas
+ustalania (tau skraca się tam do ok. 65 ms). W korelacji fazy 300 ms **jest**
+stałą czasową — tak to definiuje referencja, na którą się powołujemy
+(`stcorrdsp.cc` z x42/meters.lv2). Efekt: wskazanie skakało nerwowo i nie
+zgadzało się z innymi korelatorami. Teraz tau wynosi 0,300 s; wychylenie na
+jeden okres przy 30 Hz spadło z 40% do ok. 10,5%.
+
+### Master Meter i menu
+
+- Wykres krótkoterminowy jest teraz jednym panelem razem z kafelkami statystyk —
+  trzymają się siebie przy zmianie kolejności i ukrywaniu modułów. Domyślna
+  kolejność modułów została zaktualizowana; własne układy przeżywają
+  aktualizację (jednorazowa migracja).
+- Nowe menu **Widok**: Wygląd ▸ System / Jasny / Ciemny (zapamiętywany, dotyczy
+  tylko tej aplikacji), Tryb pomiaru ▸, Układ ▸ Standardowy ⌘1 / Siatka
+  kompaktowa ⌘2 / Gęsty 128 ⌘3 (wybór układu przeżywa restart), Zeruj peak
+  holdy ⇧⌘H.
+- Źródło syntetyczne zeszło z góry menu ŹRÓDŁO do podmenu Deweloperskie, obok
+  eksperymentalnego transportu wtyczek.
+
+### Stan weryfikacji — bez zaokrąglania
+
+- **Zweryfikowane:** 274 testy automatyczne (0 błędów, 6 pominiętych); podpisany
+  Developer ID build startuje, a uprawnienie do wejścia audio jest potwierdzone
+  na artefakcie pobranym z tego wydania, nie na kopii lokalnej.
+- **NIEzweryfikowane, tak jak w 1.0.0:** wtyczki **nigdy nie zostały potwierdzone
+  w żywym hoście DAW**. Budują się, przechodzą walidator SDK i testy jednostkowe,
+  ale „działa w hoście" to nadal oczekiwanie, nie fakt.
+- Instalacja BlackHole 128ch pozostaje osobnym, ręcznym krokiem użytkownika.
+
+### Znane ograniczenie aktualizacji (bez zmian)
+
+Sparkle aktualizuje **tylko aplikację**. Wtyczki VST3/AU leżą w katalogach
+systemowych i po auto-aktualizacji zostają w starej wersji — trzeba je
+zainstalować ponownie z `dB-Meters-Plugins-1.0.1.zip`. Kopie pasujące do
+zainstalowanej wersji aplikacji są zawsze w `dB Meters.app → Contents/PlugIns/`.
+Podpisanego instalatora `.pkg` nadal nie ma — zespół ma certyfikat Developer ID
+Application, ale nie Developer ID Installer, a niepodpisanego `.pkg` Gatekeeper
+zablokuje.
+]]></description>
+            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.1/dB-Meters-1.0.1.zip" length="2913114" type="application/octet-stream" sparkle:edSignature="E06y36vSo9qoO0Du/LqHg4rKmZ0IAc65CyCBiflRsnijRWbRtkbJf2DQgRnm4W+QfF9r9kGlHJf5E4N8WJJkDQ=="/>
+        </item>
+        <item>
             <title>1.0.0</title>
             <pubDate>Mon, 20 Jul 2026 18:48:27 +0200</pubDate>
             <sparkle:version>1.0.0</sparkle:version>
