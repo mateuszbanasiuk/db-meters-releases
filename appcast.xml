@@ -3,6 +3,82 @@
     <channel>
         <title>DBMetersApp</title>
         <item>
+            <title>1.0.2</title>
+            <pubDate>Tue, 21 Jul 2026 20:41:44 +0200</pubDate>
+            <sparkle:version>1.0.2</sparkle:version>
+            <sparkle:shortVersionString>1.0.2</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.0.2
+
+Pierwsze wydanie z licencjonowaniem. Aktualizacja jest bezpieczna: jeśli
+używasz 1.0.1, nic nie przestanie działać z dnia na dzień.
+
+### Licencja — 14 dni próbnych, potem 8 kanałów zamiast czarnego ekranu
+
+Aplikacja startuje w trybie próbnym na 14 dni, bez karty i bez konta.
+Aktywacja odbywa się **w całości offline**: klucz jest podpisany Ed25519 i
+sprawdzany lokalnie, więc rig bez internetu aktywuje się tak samo jak każdy
+inny. Klucz wkleja się w Ustawieniach ▸ Licencja.
+
+Po wygaśnięciu triala aplikacja **nie gaśnie i nie kłamie**. Mierzy dalej, ale
+tylko pierwsze 8 kanałów, i mówi o tym wprost paskiem u dołu. Kanały ponad
+limit są **usuwane z widoku, a nie rysowane jako cisza** — narzędzie pomiarowe,
+które pokazuje fałszywe zero, jest gorsze niż takie, które przyznaje się do
+ograniczenia. Osiem kanałów to pełna ścieżka odsłuchowa albo komplet stemów:
+da się z tym pracować, ale to oczywiście nie jest sesja na 128 kanałów, dla
+której ta aplikacja powstała.
+
+Cofnięcie zegara Maca nie przedłuża triala — liczony jest wykorzystany czas, a
+nie odległość od daty startu.
+
+**Wtyczki VST3/AU nie są bramkowane licencją i nie będą w 1.x.** To świadoma
+decyzja: wtyczka, która zatrzymałaby audio z powodu licencji, potrafi zniszczyć
+nagranie, a sprawdzanie licencji nie ma czego szukać w callbacku czasu
+rzeczywistego (dostęp do pęku kluczy to wywołanie systemowe). Sam tap bez
+aplikacji i tak niczego nie pokazuje.
+
+### Alert PIK nie zasłania już przycisków
+
+Komunikat o przekroczeniu wartości szczytowej potrafił przykryć **wszystkie 11
+kontrolek** obu górnych pasków mostka przy szerokości 720 pt — łącznie z
+przyciskiem, który ten alert wycisza, i z przełącznikiem formatu w Master
+Meterze. Alert dokuje teraz pod pasmem kontrolek i przesuwa się sam, gdy pasmo
+rośnie (np. po otwarciu edytora układu). Sprawdzone realnymi kliknięciami przez
+podniesiony alert, nie tylko na oko.
+
+### Wymiary zgodne z projektem
+
+Audyt porównał aplikację z makietami co do punktu i znalazł 26 rozbieżności —
+najpoważniejsza była taka, że rack mierników rysował się w mniej więcej połowie
+zaprojektowanej skali. Poza tym: studnie mierników rozciągają się teraz
+płynnie razem z oknem zamiast zatrzymywać się na najszerszym stanie, a
+typografia i odstępy nagłówków wróciły do wartości z projektu.
+
+### Stan weryfikacji — bez zaokrąglania
+
+- **Zweryfikowane:** 320 testów automatycznych (0 błędów, 6 pominiętych).
+  Licencja sprawdzona pełną drogą: klucz wystawiony przez produkcyjny signer,
+  podpis zweryfikowany kluczem publicznym wbudowanym w aplikację, limit
+  kanałów zdjęty, stan przeżywa restart.
+- **NIEzweryfikowane, tak jak w 1.0.0 i 1.0.1:** wtyczki **nigdy nie zostały
+  potwierdzone w żywym hoście DAW**. Budują się, przechodzą walidator SDK i
+  testy jednostkowe, ale „działa w hoście" to nadal oczekiwanie, nie fakt.
+- Instalacja BlackHole 128ch pozostaje osobnym, ręcznym krokiem użytkownika.
+
+### Znane ograniczenie aktualizacji (bez zmian)
+
+Sparkle aktualizuje **tylko aplikację**. Wtyczki VST3/AU leżą w katalogach
+systemowych i po auto-aktualizacji zostają w starej wersji — trzeba je
+zainstalować ponownie z `dB-Meters-Plugins-1.0.2.zip`. Kopie pasujące do
+zainstalowanej wersji aplikacji są zawsze w `dB Meters.app → Contents/PlugIns/`.
+Podpisanego instalatora `.pkg` nadal nie ma — zespół ma certyfikat Developer ID
+Application, ale nie Developer ID Installer, a niepodpisanego `.pkg` Gatekeeper
+zablokuje.
+]]></description>
+            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.2/dB-Meters-1.0.2.zip" length="2999062" type="application/octet-stream" sparkle:edSignature="vQ4CQ4dAv89NUidjUuSynAi4zr7ijloZC6Mdp6Fu7vGalap4Jnr0CezRExosYBDWcFJTIvSfQTXn6gKLsrfeCw=="/>
+        </item>
+        <item>
             <title>1.0.1</title>
             <pubDate>Mon, 20 Jul 2026 21:54:11 +0200</pubDate>
             <sparkle:version>1.0.1</sparkle:version>
