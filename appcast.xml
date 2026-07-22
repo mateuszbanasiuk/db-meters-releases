@@ -3,6 +3,47 @@
     <channel>
         <title>DBMetersApp</title>
         <item>
+            <title>1.0.10</title>
+            <pubDate>Thu, 23 Jul 2026 01:31:46 +0200</pubDate>
+            <sparkle:version>1.0.10</sparkle:version>
+            <sparkle:shortVersionString>1.0.10</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.0.10
+
+Drobna korekta zgodności LRA — dokładnie wg implementacji referencyjnej.
+
+### LRA liczony metodą referencyjną EBU
+
+Zakres głośności (LRA) liczy percentyle P10 i P95 rozkładu short-term
+loudness. Do tej pory używał interpolacji liniowej między próbkami; teraz używa
+**dokładnie tej samej metody indeksowania co implementacja referencyjna
+libebur128** (nearest-rank), na której opiera się większość profesjonalnych
+mierników i weryfikatorów EBU R128.
+
+W praktyce różnica na realnym materiale jest **poniżej 0,1 LU** — to porządkowa
+zgodność z referencją, nie zmiana odczytu, którą byś zauważył. Bramkowanie
+(−70 LUFS / −20 LU), okno 3 s i próbkowanie 10 Hz pozostają bez zmian. Panel
+Compliance w Ustawieniach odnotowuje teraz zgodność z metodą libebur128
+(uczciwie zaznaczając, że nie testowaliśmy wobec płatnego, oficjalnego zestawu
+wektorów EBU).
+
+### Stan weryfikacji — bez zaokrąglania
+
+- **Zweryfikowane:** 419 testów automatycznych (0 błędów), w tym wektory
+  referencyjne o ręcznie policzonym wyniku (P10/P95/LRA). Pozostałe mierniki
+  nietknięte; wydajność i niezmienność względem odświeżania (z 1.0.7/1.0.9)
+  zachowane.
+- Wtyczki VST3/AU nadal nie potwierdzone w żywym hoście DAW.
+
+### Znane ograniczenie aktualizacji (bez zmian)
+
+Sparkle aktualizuje tylko aplikację. Wtyczki instaluj ponownie z
+`dB-Meters-Plugins-1.0.10.zip`.
+]]></description>
+            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.10/dB-Meters-1.0.10.zip" length="3138990" type="application/octet-stream" sparkle:edSignature="0L9ahyHX427YbD4b8qSEpeVq2aZRvAK7T0F5h8I0JA0oAOswsePNp3GyYuHCQ5WBm4kDJXDndDNDC/QoSW7iDA=="/>
+        </item>
+        <item>
             <title>1.0.9</title>
             <pubDate>Thu, 23 Jul 2026 01:11:16 +0200</pubDate>
             <sparkle:version>1.0.9</sparkle:version>
@@ -108,63 +149,6 @@ Sparkle aktualizuje tylko aplikację. Wtyczki instaluj ponownie z
 `dB Meters.app → Contents/PlugIns/`.
 ]]></description>
             <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.8/dB-Meters-1.0.8.zip" length="3138707" type="application/octet-stream" sparkle:edSignature="pCNiS3ZgruNAi5Ons62qCnJPuPw8kXJOlP8Q4a/DLjMRyStd2TjYqEEUvu6DYC9DVwSZqpcDGpWl3rNOZiL8Ag=="/>
-        </item>
-        <item>
-            <title>1.0.7</title>
-            <pubDate>Wed, 22 Jul 2026 23:31:36 +0200</pubDate>
-            <sparkle:version>1.0.7</sparkle:version>
-            <sparkle:shortVersionString>1.0.7</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.0.7
-
-Duża zmiana pod maską: pomiar jest teraz niezależny od odświeżania ekranu.
-
-### Wskazania nie zależą już od częstotliwości odświeżania
-
-Do tej pory balistyka mierników (PPM, VU, RMS oraz opadanie True Peak) liczyła
-się w rytmie odświeżania interfejsu. W praktyce oznaczało to, że wynik mógł
-minimalnie zależeć od tego, czy odświeżanie ustawiłeś na 15, 30 czy 60 Hz, od
-obciążenia komputera albo od zasłonięcia okna.
-
-Teraz pomiar żyje w osobnej warstwie, taktowanej **czasem próbek audio**, a
-interfejs tylko odczytuje gotowy stan. Efekt: **ten sam sygnał daje identyczny
-odczyt niezależnie od częstotliwości odświeżania, obciążenia, a nawet gdy okno
-jest zasłonięte lub główny wątek na chwilę utknie.** Regulacja balistyki i
-prędkości z Ustawień działa dokładnie tak jak wcześniej — zmienia teraz sam
-pomiar, a nie tylko wygląd.
-
-Przy okazji dokładniejsza jest matematyka: PPM reaguje na rzeczywisty czas
-trwania impulsu (a nie na długość klatki odświeżania), a VU/RMS uśredniają moc
-poprawnie zamiast wygładzać już spierwiastkowaną amplitudę.
-
-### Solidniejszy rdzeń
-
-- Odczyt energii i liczby próbek jest teraz spójny (wcześniej mogła się zdarzyć
-  sporadyczna niespójna para), na wzór sprawdzonej ścieżki LUFS.
-- Sygnał z wartością nieskończoną lub NaN (np. z uszkodzonego urządzenia) nie
-  zatruwa już wskazania — jest odrzucany, a mierniki grają dalej.
-
-### Stan weryfikacji — bez zaokrąglania
-
-- **Zweryfikowane:** 402 testy automatyczne (0 błędów), w tym twardy test
-  niezmienności: ten sam plik audio daje **bit w bit identyczny** wynik przy
-  15/30/60 Hz, zasłoniętym oknie i 5-sekundowym zawieszeniu głównego wątku, dla
-  wszystkich rozmiarów bufora. Ścieżka czasu rzeczywistego potwierdzona na
-  poziomie kodu maszynowego (zero alokacji i blokad w callbacku audio).
-- **Świadomie na później:** pełny model VU (drugiego rzędu z overshootem),
-  synchronizacja rysowania z odświeżaniem ekranu, 8× oversampling True Peak oraz
-  walidacja oficjalnym zestawem testowym EBU. To kolejne etapy — obecne wskazania
-  są rzetelne i teraz deterministyczne.
-- Wtyczki VST3/AU nadal nie potwierdzone w żywym hoście DAW.
-
-### Znane ograniczenie aktualizacji (bez zmian)
-
-Sparkle aktualizuje tylko aplikację. Wtyczki instaluj ponownie z
-`dB-Meters-Plugins-1.0.7.zip`; kopie pasujące do wersji są w
-`dB Meters.app → Contents/PlugIns/`.
-]]></description>
-            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.7/dB-Meters-1.0.7.zip" length="3095836" type="application/octet-stream" sparkle:edSignature="21ONd4rw9C8lrnoaG2e0djVnHxDbry1Mt3Pqn/fnKzGXBETR2LCBRYSzU8w6UsJgJuBGTaufAxYME4syoWkFBA=="/>
         </item>
     </channel>
 </rss>
