@@ -3,6 +3,49 @@
     <channel>
         <title>DBMetersApp</title>
         <item>
+            <title>1.0.9</title>
+            <pubDate>Thu, 23 Jul 2026 01:11:16 +0200</pubDate>
+            <sparkle:version>1.0.9</sparkle:version>
+            <sparkle:shortVersionString>1.0.9</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.0.9
+
+Optymalizacja Master Metera na długich sesjach — bez żadnej zmiany wskazań.
+
+### Lżejszy Master Meter przy wielogodzinnym masteringu
+
+Integrated LUFS i LRA były przeliczane od zera przy każdym odświeżeniu ekranu
+(30 razy na sekundę), a przy sesji liczonej w godzinach oznaczało to sortowanie
+i skanowanie coraz większej historii pomiaru na głównym wątku. Teraz te dwie
+wartości liczą się **dwa razy na sekundę** zamiast trzydzieści, a między
+przeliczeniami interfejs czyta gotowy wynik. Obciążenie głównego wątku przy
+otwartym Master Meterze na 4-godzinnej sesji spada o rząd wielkości.
+
+**Wskazania są identyczne co do bitu** — to wyłącznie kwestia tego, jak często
+liczba jest przeliczana, a nie jaka jest. Próbkowanie LRA pozostaje na 10 Hz
+zgodnie z EBU; zmienia się tylko tempo odświeżania wyświetlanej wartości, co i
+tak mieści się w zaleceniu EBU (Integrated 1–2 Hz).
+
+### Stan weryfikacji — bez zaokrąglania
+
+- **Zweryfikowane:** 416 testów automatycznych (0 błędów), w tym test
+  równoważności bit-w-bit (throttled vs liczone co klatkę) oraz pomiar kosztu
+  potwierdzający pięciokrotny spadek liczby przeliczeń. Ścieżka czasu
+  rzeczywistego i niezmienność względem odświeżania (z 1.0.7) nietknięte.
+- **Świadomie na później:** pełny model VU, synchronizacja rysowania z ekranem,
+  8× oversampling, weryfikacja oficjalnym zestawem EBU.
+- Wtyczki VST3/AU nadal nie potwierdzone w żywym hoście DAW.
+
+### Znane ograniczenie aktualizacji (bez zmian)
+
+Sparkle aktualizuje tylko aplikację. Wtyczki instaluj ponownie z
+`dB-Meters-Plugins-1.0.9.zip`; kopie pasujące do wersji są w
+`dB Meters.app → Contents/PlugIns/`.
+]]></description>
+            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.9/dB-Meters-1.0.9.zip" length="3139018" type="application/octet-stream" sparkle:edSignature="3ztEKld3pr+gYdUvXqiPx4rN5FtuZ0h5sgiDO0yib+FiAReWnYaKarzLX2ZKgs0YTaOQrtWEYfIlfVv+j2J6DA=="/>
+        </item>
+        <item>
             <title>1.0.8</title>
             <pubDate>Thu, 23 Jul 2026 00:42:52 +0200</pubDate>
             <sparkle:version>1.0.8</sparkle:version>
@@ -122,70 +165,6 @@ Sparkle aktualizuje tylko aplikację. Wtyczki instaluj ponownie z
 `dB Meters.app → Contents/PlugIns/`.
 ]]></description>
             <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.7/dB-Meters-1.0.7.zip" length="3095836" type="application/octet-stream" sparkle:edSignature="21ONd4rw9C8lrnoaG2e0djVnHxDbry1Mt3Pqn/fnKzGXBETR2LCBRYSzU8w6UsJgJuBGTaufAxYME4syoWkFBA=="/>
-        </item>
-        <item>
-            <title>1.0.6</title>
-            <pubDate>Wed, 22 Jul 2026 20:54:50 +0200</pubDate>
-            <sparkle:version>1.0.6</sparkle:version>
-            <sparkle:shortVersionString>1.0.6</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.0.6
-
-Poprawki po audycie metrologicznym: dokładniejszy True Peak, szybsze
-próbkowanie LRA i uczciwsze etykiety.
-
-### True Peak — pełnoskalowa próbka nigdy nie zniknie
-
-Wynik True Peak nie może już być niższy od surowego szczytu próbki. Wcześniej
-pojedyncza próbka o pełnej skali mogła po rekonstrukcji odczytać się nieco
-poniżej 0 dBTP i nie wywołać wskazania przesterowania. Teraz miernik pokazuje
-większą z dwóch wartości: rekonstrukcję międzypróbkową albo surowy szczyt.
-
-Rozdzielone są też dwa różne zdarzenia, wcześniej zlane w jedno „Clip":
-
-- **Clip** — surowa próbka osiągnęła 0 dBFS (twarde przesterowanie cyfrowe).
-- **TP Over** — True Peak przekroczył pułap dostawy wybranego presetu
-  (np. −1 / −2 / −3 dBTP).
-
-### LRA próbkowany 10× częściej
-
-Zakres głośności (LRA) pobierał próbkę raz na sekundę; teraz co 100 ms, zgodnie
-z EBU Tech 3342. Odczyt LRA jest przez to stabilniejszy i wierniejszy,
-szczególnie na krótszym materiale.
-
-### Uczciwsze etykiety presetów
-
-Presety loudness mówią teraz wprost, czym są, żeby nic nie sugerowało
-certyfikacji, której nie deklarujemy:
-
-- **EBU R128 −23** — norma.
-- **ATSC A/85 −24 (short-form / full-program)** — bez bramkowania dialogiem,
-  więc nie do long-formu normalizowanego dialogiem.
-- **Spotify Normal −14 (advisory)** i **Apple Sound Check −16 (advisory)** —
-  wskazówki platform, nie oficjalne wymagania dostawy.
-
-Odczyty True Peak są teraz jawnie opisane w **dBTP**.
-
-### Stan weryfikacji — bez zaokrąglania
-
-- **Zweryfikowane:** 378 testów automatycznych (0 błędów), w tym referencyjne
-  dla True Peak (0 dBFS → 0,0 dBTP; izolowana pełna skala → co najmniej 0 dBTP;
-  przesterowanie międzypróbkowe → poprawne dodatnie dBTP) i częstości LRA.
-- **Świadomie odłożone na później:** głębszy rework, w którym pomiar PPM/VU/RMS
-  jest całkowicie niezależny od częstotliwości odświeżania ekranu. To większa
-  zmiana architektury i będzie osobnym etapem. Obecne wartości są użyteczne
-  diagnostycznie; pełnych deklaracji zgodności IEC/EBU we wszystkich trybach
-  świadomie nie składamy.
-- Wtyczki VST3/AU nadal nie potwierdzone w żywym hoście DAW.
-
-### Znane ograniczenie aktualizacji (bez zmian)
-
-Sparkle aktualizuje tylko aplikację. Wtyczki instaluj ponownie z
-`dB-Meters-Plugins-1.0.6.zip`; kopie pasujące do wersji są w
-`dB Meters.app → Contents/PlugIns/`.
-]]></description>
-            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.6/dB-Meters-1.0.6.zip" length="3074848" type="application/octet-stream" sparkle:edSignature="oAOUj/RLBOW+0beVVAlTCAL+ttZZVUcLtvQYJvGWU4jBixhrA4i40MiYxq4UhWeKIyoUl7TuYlEdM5P5CYc5DA=="/>
         </item>
     </channel>
 </rss>
