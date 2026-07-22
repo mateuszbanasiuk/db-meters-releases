@@ -3,6 +3,63 @@
     <channel>
         <title>DBMetersApp</title>
         <item>
+            <title>1.0.7</title>
+            <pubDate>Wed, 22 Jul 2026 23:31:36 +0200</pubDate>
+            <sparkle:version>1.0.7</sparkle:version>
+            <sparkle:shortVersionString>1.0.7</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.0.7
+
+Duża zmiana pod maską: pomiar jest teraz niezależny od odświeżania ekranu.
+
+### Wskazania nie zależą już od częstotliwości odświeżania
+
+Do tej pory balistyka mierników (PPM, VU, RMS oraz opadanie True Peak) liczyła
+się w rytmie odświeżania interfejsu. W praktyce oznaczało to, że wynik mógł
+minimalnie zależeć od tego, czy odświeżanie ustawiłeś na 15, 30 czy 60 Hz, od
+obciążenia komputera albo od zasłonięcia okna.
+
+Teraz pomiar żyje w osobnej warstwie, taktowanej **czasem próbek audio**, a
+interfejs tylko odczytuje gotowy stan. Efekt: **ten sam sygnał daje identyczny
+odczyt niezależnie od częstotliwości odświeżania, obciążenia, a nawet gdy okno
+jest zasłonięte lub główny wątek na chwilę utknie.** Regulacja balistyki i
+prędkości z Ustawień działa dokładnie tak jak wcześniej — zmienia teraz sam
+pomiar, a nie tylko wygląd.
+
+Przy okazji dokładniejsza jest matematyka: PPM reaguje na rzeczywisty czas
+trwania impulsu (a nie na długość klatki odświeżania), a VU/RMS uśredniają moc
+poprawnie zamiast wygładzać już spierwiastkowaną amplitudę.
+
+### Solidniejszy rdzeń
+
+- Odczyt energii i liczby próbek jest teraz spójny (wcześniej mogła się zdarzyć
+  sporadyczna niespójna para), na wzór sprawdzonej ścieżki LUFS.
+- Sygnał z wartością nieskończoną lub NaN (np. z uszkodzonego urządzenia) nie
+  zatruwa już wskazania — jest odrzucany, a mierniki grają dalej.
+
+### Stan weryfikacji — bez zaokrąglania
+
+- **Zweryfikowane:** 402 testy automatyczne (0 błędów), w tym twardy test
+  niezmienności: ten sam plik audio daje **bit w bit identyczny** wynik przy
+  15/30/60 Hz, zasłoniętym oknie i 5-sekundowym zawieszeniu głównego wątku, dla
+  wszystkich rozmiarów bufora. Ścieżka czasu rzeczywistego potwierdzona na
+  poziomie kodu maszynowego (zero alokacji i blokad w callbacku audio).
+- **Świadomie na później:** pełny model VU (drugiego rzędu z overshootem),
+  synchronizacja rysowania z odświeżaniem ekranu, 8× oversampling True Peak oraz
+  walidacja oficjalnym zestawem testowym EBU. To kolejne etapy — obecne wskazania
+  są rzetelne i teraz deterministyczne.
+- Wtyczki VST3/AU nadal nie potwierdzone w żywym hoście DAW.
+
+### Znane ograniczenie aktualizacji (bez zmian)
+
+Sparkle aktualizuje tylko aplikację. Wtyczki instaluj ponownie z
+`dB-Meters-Plugins-1.0.7.zip`; kopie pasujące do wersji są w
+`dB Meters.app → Contents/PlugIns/`.
+]]></description>
+            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.7/dB-Meters-1.0.7.zip" length="3095836" type="application/octet-stream" sparkle:edSignature="21ONd4rw9C8lrnoaG2e0djVnHxDbry1Mt3Pqn/fnKzGXBETR2LCBRYSzU8w6UsJgJuBGTaufAxYME4syoWkFBA=="/>
+        </item>
+        <item>
             <title>1.0.6</title>
             <pubDate>Wed, 22 Jul 2026 20:54:50 +0200</pubDate>
             <sparkle:version>1.0.6</sparkle:version>
@@ -111,73 +168,6 @@ ponownie z `dB-Meters-Plugins-1.0.5.zip`; kopie pasujące do wersji są zawsze
 w `dB Meters.app → Contents/PlugIns/`.
 ]]></description>
             <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.5/dB-Meters-1.0.5.zip" length="3065259" type="application/octet-stream" sparkle:edSignature="jX1GI/jhu0DlymFed8b03401tM6MmGF5hpeoAMa0Am3r8udPOxZ6cild/orQJJ0L2ONvr4G/UfkN0VDne2GTAA=="/>
-        </item>
-        <item>
-            <title>1.0.4</title>
-            <pubDate>Wed, 22 Jul 2026 16:30:11 +0200</pubDate>
-            <sparkle:version>1.0.4</sparkle:version>
-            <sparkle:shortVersionString>1.0.4</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.0.4
-
-Trzy rzeczy z odsłuchu: mniejsze opóźnienie, poprawiony True Peak i regulacja
-balistyki.
-
-### True Peak był zawyżony — teraz czyta poprawnie
-
-Detektor True Peak miał źle dobrany filtr w interpolatorze 4× (zły cutoff
-antyimagingowy). Efekt: **miernik zawyżał** — sygnał 0 dBFS pokazywał ~+0,9
-dBTP zamiast 0,0, a błąd rósł z częstotliwością, sięgając kilku dB w górnym
-paśmie. Po naprawie sinus 0 dBFS czyta 0,0 dBTP, a prawdziwe przesterowania
-międzypróbkowe pokazują się w realnej wysokości. Skala nadal ma zapas nad 0 dB
-(żeby przekroczenia było widać), ale doszła **wyraźna linia odniesienia 0 dBFS**
-na słupku, więc 0 dB jest jednoznaczne.
-
-### Mniejsze opóźnienie
-
-Aplikacja nie ustawiała rozmiaru bufora wejścia, więc pracowała na domyślnym
-buforze urządzenia. Teraz zaciska go do 256 ramek (w granicach możliwości
-urządzenia) — **latencja wejścia spadła o połowę** na typowym sprzęcie
-(zmierzone 10,7 → 5,3 ms). Dodatkowo mierniki odświeżają się teraz 60 razy na
-sekundę (wcześniej 30) i usunięto zbędne opóźnienie w pętli rysowania —
-wskazania reagują wyraźnie szybciej.
-
-### Regulacja balistyki i prędkości (nowa zakładka Ustawień)
-
-W Ustawieniach doszła zakładka **Ballistics & Speed**. Domyślne wartości są
-dokładnie zgodne z normami (VU 300 ms, PPM wg IEC 60268-10, True Peak i LUFS wg
-BS.1770), więc bez zmian dostajesz to, co powinno być. Ale możesz teraz
-dostroić:
-
-- **Presety** — Standard / Broadcast (norma), Fast / Tracking (szybsze reakcje
-  do nagrywania), Slow / Mix (spokojniejszy odczyt).
-- Częstotliwość odświeżania (15–60 Hz), czasy integracji VU/RMS, standard PPM
-  (Type I DIN/Nordic albo Type IIa BBC), tempo opadania True Peak, czas
-  trzymania peak-hold (do nieskończoności).
-- Przycisk **Reset to Standard**.
-
-Regulacja dotyczy wyłącznie tego, jak mierniki wyglądają i reagują — sam pomiar
-(LUFS, oversampling True Peak) zawsze trzyma się BS.1770.
-
-### Stan weryfikacji — bez zaokrąglania
-
-- **Zweryfikowane:** 368 testów automatycznych (0 błędów). Skalowanie True Peak
-  potwierdzone sygnałem referencyjnym (0 dBFS → 0,0 dBTP; przesterowanie
-  międzypróbkowe → poprawne dodatnie dBTP). Redukcja bufora zmierzona na żywym
-  sprzęcie. Rewizja kodu (Codex) — jeden realny drobiazg (odporność na zepsuty
-  sterownik) naprawiony.
-- **NIEzweryfikowane, tak jak wcześniej:** wtyczki VST3/AU nie zostały
-  potwierdzone w żywym hoście DAW.
-- Instalacja BlackHole 128ch pozostaje osobnym, ręcznym krokiem.
-
-### Znane ograniczenie aktualizacji (bez zmian)
-
-Sparkle aktualizuje **tylko aplikację**. Wtyczki VST3/AU trzeba zainstalować
-ponownie z `dB-Meters-Plugins-1.0.4.zip`; kopie pasujące do wersji są zawsze
-w `dB Meters.app → Contents/PlugIns/`.
-]]></description>
-            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.4/dB-Meters-1.0.4.zip" length="3062267" type="application/octet-stream" sparkle:edSignature="KZtbCqxtsvxd1vlJKD2wRiG7RWAdsrphKy2Pvr+j7ObxMCta/nUQlPlsmRClmcE4C1zZ5Jt6JlBpQtQRS7JsBQ=="/>
         </item>
     </channel>
 </rss>
