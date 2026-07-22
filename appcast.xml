@@ -3,6 +3,70 @@
     <channel>
         <title>DBMetersApp</title>
         <item>
+            <title>1.0.6</title>
+            <pubDate>Wed, 22 Jul 2026 20:54:50 +0200</pubDate>
+            <sparkle:version>1.0.6</sparkle:version>
+            <sparkle:shortVersionString>1.0.6</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.0.6
+
+Poprawki po audycie metrologicznym: dokładniejszy True Peak, szybsze
+próbkowanie LRA i uczciwsze etykiety.
+
+### True Peak — pełnoskalowa próbka nigdy nie zniknie
+
+Wynik True Peak nie może już być niższy od surowego szczytu próbki. Wcześniej
+pojedyncza próbka o pełnej skali mogła po rekonstrukcji odczytać się nieco
+poniżej 0 dBTP i nie wywołać wskazania przesterowania. Teraz miernik pokazuje
+większą z dwóch wartości: rekonstrukcję międzypróbkową albo surowy szczyt.
+
+Rozdzielone są też dwa różne zdarzenia, wcześniej zlane w jedno „Clip":
+
+- **Clip** — surowa próbka osiągnęła 0 dBFS (twarde przesterowanie cyfrowe).
+- **TP Over** — True Peak przekroczył pułap dostawy wybranego presetu
+  (np. −1 / −2 / −3 dBTP).
+
+### LRA próbkowany 10× częściej
+
+Zakres głośności (LRA) pobierał próbkę raz na sekundę; teraz co 100 ms, zgodnie
+z EBU Tech 3342. Odczyt LRA jest przez to stabilniejszy i wierniejszy,
+szczególnie na krótszym materiale.
+
+### Uczciwsze etykiety presetów
+
+Presety loudness mówią teraz wprost, czym są, żeby nic nie sugerowało
+certyfikacji, której nie deklarujemy:
+
+- **EBU R128 −23** — norma.
+- **ATSC A/85 −24 (short-form / full-program)** — bez bramkowania dialogiem,
+  więc nie do long-formu normalizowanego dialogiem.
+- **Spotify Normal −14 (advisory)** i **Apple Sound Check −16 (advisory)** —
+  wskazówki platform, nie oficjalne wymagania dostawy.
+
+Odczyty True Peak są teraz jawnie opisane w **dBTP**.
+
+### Stan weryfikacji — bez zaokrąglania
+
+- **Zweryfikowane:** 378 testów automatycznych (0 błędów), w tym referencyjne
+  dla True Peak (0 dBFS → 0,0 dBTP; izolowana pełna skala → co najmniej 0 dBTP;
+  przesterowanie międzypróbkowe → poprawne dodatnie dBTP) i częstości LRA.
+- **Świadomie odłożone na później:** głębszy rework, w którym pomiar PPM/VU/RMS
+  jest całkowicie niezależny od częstotliwości odświeżania ekranu. To większa
+  zmiana architektury i będzie osobnym etapem. Obecne wartości są użyteczne
+  diagnostycznie; pełnych deklaracji zgodności IEC/EBU we wszystkich trybach
+  świadomie nie składamy.
+- Wtyczki VST3/AU nadal nie potwierdzone w żywym hoście DAW.
+
+### Znane ograniczenie aktualizacji (bez zmian)
+
+Sparkle aktualizuje tylko aplikację. Wtyczki instaluj ponownie z
+`dB-Meters-Plugins-1.0.6.zip`; kopie pasujące do wersji są w
+`dB Meters.app → Contents/PlugIns/`.
+]]></description>
+            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.6/dB-Meters-1.0.6.zip" length="3074848" type="application/octet-stream" sparkle:edSignature="oAOUj/RLBOW+0beVVAlTCAL+ttZZVUcLtvQYJvGWU4jBixhrA4i40MiYxq4UhWeKIyoUl7TuYlEdM5P5CYc5DA=="/>
+        </item>
+        <item>
             <title>1.0.5</title>
             <pubDate>Wed, 22 Jul 2026 18:40:09 +0200</pubDate>
             <sparkle:version>1.0.5</sparkle:version>
@@ -114,74 +178,6 @@ ponownie z `dB-Meters-Plugins-1.0.4.zip`; kopie pasujące do wersji są zawsze
 w `dB Meters.app → Contents/PlugIns/`.
 ]]></description>
             <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.4/dB-Meters-1.0.4.zip" length="3062267" type="application/octet-stream" sparkle:edSignature="KZtbCqxtsvxd1vlJKD2wRiG7RWAdsrphKy2Pvr+j7ObxMCta/nUQlPlsmRClmcE4C1zZ5Jt6JlBpQtQRS7JsBQ=="/>
-        </item>
-        <item>
-            <title>1.0.3</title>
-            <pubDate>Wed, 22 Jul 2026 00:45:40 +0200</pubDate>
-            <sparkle:version>1.0.3</sparkle:version>
-            <sparkle:shortVersionString>1.0.3</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.0.3
-
-Poprawki z odsłuchu — osiem rzeczy zgłoszonych po 1.0.2.
-
-### Start bez fałszywego alarmu
-
-Aplikacja nie startuje już na sygnale testowym. Pierwsze uruchomienie zaczyna
-w stanie **bez źródła** (żadnych mierników w ruchu), a przy kolejnych
-otwiera się na tym źródle, którego używałeś ostatnio — pamięta je między
-sesjami. Jeśli zapamiętane urządzenie zniknęło, wraca do stanu bez źródła (a
-nie po cichu do generatora testowego).
-
-To rozwiązuje też komunikat **„PIK +18" przy ciszy**: nie był błędem progu —
-aplikacja startowała na wewnętrznym tonie testowym, którego transient w
-pomiarze true-peak (z 4-krotnym oversamplingiem) przekracza 0 dB i zaskakiwał
-alert. Skoro start jest teraz bez źródła, nie ma sygnału i nie ma alarmu.
-Generator testowy zszedł do menu Deweloperskie.
-
-### Panel mierników — cztery tryby zamiast ośmiu
-
-Panel pojedynczych mierników pokazuje teraz **True Peak, VU, PPM i RMS+Peak**.
-Pro Tools Classic, korelacja fazy, LUFS i Multi zostały z niego usunięte — te
-pomiary mają swoje właściwe miejsce w oknie **Master Meter** (⌘⇧M), gdzie
-działają bez zmian. To porządkuje wybór, nie odbiera funkcji.
-
-### Routing
-
-- Klawisz **Tab przechodzi teraz w dół kolumny**, a nie w poprzek wiersza —
-  jak w arkuszu. Shift-Tab cofa. Wpisujesz całą kolumnę numerów kanałów bez
-  skakania między polami.
-- Alarm PIK **nie pojawia się już w oknie routingu** — to okno służy do
-  mapowania, nie do monitorowania.
-
-### Większe, czytelniejsze cyfry
-
-Numery kanałów i oznaczenia routingu są powiększone we wszystkich trzech
-układach: standardowym, kompaktowym (2×) i gęstym 128 (1,5×). Widać je teraz
-z odległości bez mrużenia oczu, a wielocyfrowe zakresy stereo (np. `⇄127–128`)
-mieszczą się w całości.
-
-### Stan weryfikacji — bez zaokrąglania
-
-- **Zweryfikowane:** 346 testów automatycznych (0 błędów, 8 pominiętych).
-  Powiększona typografia sprawdzona na renderach z prawdziwym motywem dla
-  128 kanałów i najwęższej szerokości okna (Dense ×1,5 i Compact ×2 bez
-  ucinania). Master Meter potwierdzony na żywo — LUFS i korelacja fazy liczą
-  dalej. Rewizja kodu (Codex) czysta.
-- **NIEzweryfikowane, tak jak wcześniej:** wtyczki VST3/AU **nie zostały
-  potwierdzone w żywym hoście DAW**. Budują się i przechodzą walidator SDK,
-  ale „działa w hoście" to nadal oczekiwanie, nie fakt.
-- Instalacja BlackHole 128ch pozostaje osobnym, ręcznym krokiem.
-
-### Znane ograniczenie aktualizacji (bez zmian)
-
-Sparkle aktualizuje **tylko aplikację**. Wtyczki VST3/AU po auto-aktualizacji
-zostają w starej wersji — trzeba je zainstalować ponownie z
-`dB-Meters-Plugins-1.0.3.zip`. Kopie pasujące do zainstalowanej wersji są
-zawsze w `dB Meters.app → Contents/PlugIns/`.
-]]></description>
-            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.3/dB-Meters-1.0.3.zip" length="3008196" type="application/octet-stream" sparkle:edSignature="jFBtL3XD/NUJF71qAztVGH/Q5eDtDTEulVlr8ShuuMcfYRHWgfbiirXmsFpLF8Lm4sPIFD0rmdXJQiovTBChAQ=="/>
         </item>
     </channel>
 </rss>
