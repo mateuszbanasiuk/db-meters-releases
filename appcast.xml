@@ -3,6 +3,56 @@
     <channel>
         <title>DBMetersApp</title>
         <item>
+            <title>1.0.11</title>
+            <pubDate>Thu, 23 Jul 2026 07:17:00 +0200</pubDate>
+            <sparkle:version>1.0.11</sparkle:version>
+            <sparkle:shortVersionString>1.0.11</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.0.11
+
+Płynniejsze rysowanie, opcjonalny 8× True Peak i lżejszy rdzeń.
+
+### True Peak: opcjonalny tryb 8× dla większej dokładności
+
+W Ustawieniach doszedł przełącznik oversamplingu True Peak: **4× (szybki,
+domyślny)** albo **8× (dokładniejszy)**. Domyślnie zostaje 4× — Twoje odczyty
+się nie zmieniają. Tryb 8× lepiej wyłapuje szczyty międzypróbkowe blisko górnej
+granicy pasma (mniejsze zaniżenie przy wysokich częstotliwościach), kosztem
+odrobiny CPU. Panel Compliance odnotowuje oba tryby.
+
+### Rysowanie zsynchronizowane z ekranem
+
+Odświeżanie mierników przeszło z prostego zegara na źródło zsynchronizowane z
+odświeżaniem ekranu (CADisplayLink) — obraz jest płynniejszy i lepiej trafia w
+klatki, a przy zasłoniętym oknie w ogóle nie rysuje. Regulacja częstotliwości
+odświeżania (15/30/60 Hz) działa jak dotąd. **Same wartości pomiaru się nie
+zmieniają** — od wersji 1.0.7 pomiar żyje w osobnej warstwie taktowanej czasem
+próbek, a rysowanie tylko go podgląda.
+
+### Lżejszy rdzeń
+
+Usunięto ostatecznie starą, nieużywaną już ścieżkę mierników (po przejściu na
+silnik pomiarowy w 1.0.7 leżała odłogiem). Mniej kodu na gorącej ścieżce audio,
+bez zmiany zachowania.
+
+### Stan weryfikacji — bez zaokrąglania
+
+- **Zweryfikowane:** 438 testów automatycznych (0 błędów). Tryb 4× potwierdzony
+  jako bit-w-bit identyczny z poprzednim; 8× mierzalnie bliżej wartości
+  teoretycznej przy Nyquiście; niezmienność pomiaru względem odświeżania nadal
+  bit-w-bit; ścieżka czasu rzeczywistego potwierdzona na poziomie kodu
+  maszynowego.
+- Wtyczki VST3/AU nadal nie potwierdzone w żywym hoście DAW.
+
+### Znane ograniczenie aktualizacji (bez zmian)
+
+Sparkle aktualizuje tylko aplikację. Wtyczki instaluj ponownie z
+`dB-Meters-Plugins-1.0.11.zip`.
+]]></description>
+            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.11/dB-Meters-1.0.11.zip" length="3157343" type="application/octet-stream" sparkle:edSignature="wKXKJzq3kZaczYLIUa48pShSrBLKSKlFrneyZoSGf8t0GKXIKKF+Ax60Hcr5uorjwJnKBI4Xn+SsMT9Cezr9DQ=="/>
+        </item>
+        <item>
             <title>1.0.10</title>
             <pubDate>Thu, 23 Jul 2026 01:31:46 +0200</pubDate>
             <sparkle:version>1.0.10</sparkle:version>
@@ -85,70 +135,6 @@ Sparkle aktualizuje tylko aplikację. Wtyczki instaluj ponownie z
 `dB Meters.app → Contents/PlugIns/`.
 ]]></description>
             <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.9/dB-Meters-1.0.9.zip" length="3139018" type="application/octet-stream" sparkle:edSignature="3ztEKld3pr+gYdUvXqiPx4rN5FtuZ0h5sgiDO0yib+FiAReWnYaKarzLX2ZKgs0YTaOQrtWEYfIlfVv+j2J6DA=="/>
-        </item>
-        <item>
-            <title>1.0.8</title>
-            <pubDate>Thu, 23 Jul 2026 00:42:52 +0200</pubDate>
-            <sparkle:version>1.0.8</sparkle:version>
-            <sparkle:shortVersionString>1.0.8</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.0.8
-
-Uczciwość i higiena po audycie: jaśniejsze komunikaty, lżejszy rdzeń, nowy
-panel zgodności.
-
-### Mierniki mówią, kiedy jeszcze się „rozgrzewają"
-
-Wartości loudness (Momentary, Short-term, LUFS per kanał) potrzebują pełnego
-okna pomiarowego — 400 ms albo 3 sekundy — zanim mają sens. Do tej pory
-pokazywały liczbę już z niepełnego okna. Teraz jawnie piszą **„warming up"**,
-dopóki okno się nie wypełni, i dopiero wtedy pokazują wynik. LRA pokazuje
-**„LRA stabilizing"** przez pierwsze 60 sekund, zgodnie z zaleceniem EBU. Cisza
-i „rozgrzewanie" to teraz dwa różne stany — nie mylą się już ze sobą.
-
-### Właściwe jednostki i etykiety
-
-- Preset **ATSC A/85** pokazuje teraz **LKFS** (jego właściwa jednostka)
-  zamiast LUFS. Liczba jest ta sama — chodziło tylko o poprawną nazwę.
-- Loudness liczony per pojedynczy kanał jest oznaczony jako **„diagnostic —
-  poza EBU Mode"**, bo tryb EBU dotyczy całego programu, nie osobnych kanałów.
-
-### Nowy panel „Measurement compliance"
-
-W Ustawieniach doszła zakładka **Compliance**: uczciwe podsumowanie każdego
-miernika — na jakiej normie się opiera, jak liczy, i **gdzie kończy się jego
-zgodność**. Wprost napisane, czego nie ma: że VU to średnia z balistyką
-inspirowaną VU (a nie ścisły IEC), że PPM jest w skali dBFS, że RTA to widmo
-FFT (a nie analizator ułamkowo-oktawowy IEC), i że aplikacja nie jest
-certyfikowana laboratoryjnie. To narzędzie dla realizatora, nie certyfikat — i
-teraz mówi to wprost.
-
-### Lżejszy rdzeń
-
-Po wprowadzeniu silnika pomiarowego (1.0.7) stara ścieżka mierników liczyła
-komplet wartości, których interfejs już nie odczytywał. Usunięto tę martwą
-pracę z callbacku audio — mniejsze obciążenie przy 128 kanałach, bez żadnej
-zmiany wskazań.
-
-### Stan weryfikacji — bez zaokrąglania
-
-- **Zweryfikowane:** 414 testów automatycznych (0 błędów). Usunięcie martwej
-  pracy z callbacku potwierdzone na poziomie kodu maszynowego; niezmienność
-  pomiaru względem odświeżania (z 1.0.7) nadal bit w bit. Żadna wartość
-  miernika się nie zmieniła — to wydanie dotyczy komunikatów, jednostek i
-  wydajności.
-- **Świadomie na później:** pełny model VU (drugiego rzędu), synchronizacja
-  rysowania z ekranem, 8× oversampling, weryfikacja oficjalnym zestawem EBU.
-- Wtyczki VST3/AU nadal nie potwierdzone w żywym hoście DAW.
-
-### Znane ograniczenie aktualizacji (bez zmian)
-
-Sparkle aktualizuje tylko aplikację. Wtyczki instaluj ponownie z
-`dB-Meters-Plugins-1.0.8.zip`; kopie pasujące do wersji są w
-`dB Meters.app → Contents/PlugIns/`.
-]]></description>
-            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.8/dB-Meters-1.0.8.zip" length="3138707" type="application/octet-stream" sparkle:edSignature="pCNiS3ZgruNAi5Ons62qCnJPuPw8kXJOlP8Q4a/DLjMRyStd2TjYqEEUvu6DYC9DVwSZqpcDGpWl3rNOZiL8Ag=="/>
         </item>
     </channel>
 </rss>
