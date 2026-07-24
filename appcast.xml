@@ -3,6 +3,43 @@
     <channel>
         <title>DBMetersApp</title>
         <item>
+            <title>1.0.12</title>
+            <pubDate>Fri, 24 Jul 2026 10:47:40 +0200</pubDate>
+            <sparkle:version>1.0.12</sparkle:version>
+            <sparkle:shortVersionString>1.0.12</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.0.12
+
+Drobne wzmocnienie ścieżki czasu rzeczywistego — bez zmiany wskazań.
+
+### Przełączanie oversamplingu True Peak w pełni RT-bezpieczne
+
+Opcja True Peak 8× (z 1.0.11) przełączała tablicę współczynników przez
+przypisanie tablicy Swift, co na wątku audio wiązało się z operacją zarządzania
+pamięcią (ARC). W praktyce optymalizator ją usuwał, ale poleganie na tym na
+ścieżce audio jest kruche. Teraz detektor trzyma współczynniki jako trwałe,
+surowe wskaźniki — przełączenie 4×↔8× i odczyt na próbkę są **strukturalnie
+wolne od jakichkolwiek alokacji i ARC** (potwierdzone na poziomie kodu
+maszynowego). Tryb domyślny 4× pozostaje bit w bit identyczny.
+
+Znalezione podczas przeglądu kodu zewnętrznym recenzentem.
+
+### Stan weryfikacji
+
+- **Zweryfikowane:** 438 testów automatycznych (0 błędów), w tym pin
+  bit-identyczności 4× oraz dowód zerowej alokacji/ARC w callbacku audio.
+  Żadna wartość miernika się nie zmieniła.
+- Wtyczki VST3/AU nadal nie potwierdzone w żywym hoście DAW.
+
+### Znane ograniczenie aktualizacji (bez zmian)
+
+Sparkle aktualizuje tylko aplikację. Wtyczki instaluj ponownie z
+`dB-Meters-Plugins-1.0.12.zip`.
+]]></description>
+            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.12/dB-Meters-1.0.12.zip" length="3157653" type="application/octet-stream" sparkle:edSignature="m060X3RPRuPCA+LITS9ruUvun7SDaKe17uP2/WrrrJExQLwWimg1oXng/abOmRpbQL9OB3Xj1Mp6kKiY0TFMDA=="/>
+        </item>
+        <item>
             <title>1.0.11</title>
             <pubDate>Thu, 23 Jul 2026 07:17:00 +0200</pubDate>
             <sparkle:version>1.0.11</sparkle:version>
@@ -92,49 +129,6 @@ Sparkle aktualizuje tylko aplikację. Wtyczki instaluj ponownie z
 `dB-Meters-Plugins-1.0.10.zip`.
 ]]></description>
             <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.10/dB-Meters-1.0.10.zip" length="3138990" type="application/octet-stream" sparkle:edSignature="0L9ahyHX427YbD4b8qSEpeVq2aZRvAK7T0F5h8I0JA0oAOswsePNp3GyYuHCQ5WBm4kDJXDndDNDC/QoSW7iDA=="/>
-        </item>
-        <item>
-            <title>1.0.9</title>
-            <pubDate>Thu, 23 Jul 2026 01:11:16 +0200</pubDate>
-            <sparkle:version>1.0.9</sparkle:version>
-            <sparkle:shortVersionString>1.0.9</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.0.9
-
-Optymalizacja Master Metera na długich sesjach — bez żadnej zmiany wskazań.
-
-### Lżejszy Master Meter przy wielogodzinnym masteringu
-
-Integrated LUFS i LRA były przeliczane od zera przy każdym odświeżeniu ekranu
-(30 razy na sekundę), a przy sesji liczonej w godzinach oznaczało to sortowanie
-i skanowanie coraz większej historii pomiaru na głównym wątku. Teraz te dwie
-wartości liczą się **dwa razy na sekundę** zamiast trzydzieści, a między
-przeliczeniami interfejs czyta gotowy wynik. Obciążenie głównego wątku przy
-otwartym Master Meterze na 4-godzinnej sesji spada o rząd wielkości.
-
-**Wskazania są identyczne co do bitu** — to wyłącznie kwestia tego, jak często
-liczba jest przeliczana, a nie jaka jest. Próbkowanie LRA pozostaje na 10 Hz
-zgodnie z EBU; zmienia się tylko tempo odświeżania wyświetlanej wartości, co i
-tak mieści się w zaleceniu EBU (Integrated 1–2 Hz).
-
-### Stan weryfikacji — bez zaokrąglania
-
-- **Zweryfikowane:** 416 testów automatycznych (0 błędów), w tym test
-  równoważności bit-w-bit (throttled vs liczone co klatkę) oraz pomiar kosztu
-  potwierdzający pięciokrotny spadek liczby przeliczeń. Ścieżka czasu
-  rzeczywistego i niezmienność względem odświeżania (z 1.0.7) nietknięte.
-- **Świadomie na później:** pełny model VU, synchronizacja rysowania z ekranem,
-  8× oversampling, weryfikacja oficjalnym zestawem EBU.
-- Wtyczki VST3/AU nadal nie potwierdzone w żywym hoście DAW.
-
-### Znane ograniczenie aktualizacji (bez zmian)
-
-Sparkle aktualizuje tylko aplikację. Wtyczki instaluj ponownie z
-`dB-Meters-Plugins-1.0.9.zip`; kopie pasujące do wersji są w
-`dB Meters.app → Contents/PlugIns/`.
-]]></description>
-            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.9/dB-Meters-1.0.9.zip" length="3139018" type="application/octet-stream" sparkle:edSignature="3ztEKld3pr+gYdUvXqiPx4rN5FtuZ0h5sgiDO0yib+FiAReWnYaKarzLX2ZKgs0YTaOQrtWEYfIlfVv+j2J6DA=="/>
         </item>
     </channel>
 </rss>
