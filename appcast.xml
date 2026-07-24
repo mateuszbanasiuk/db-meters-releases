@@ -3,6 +3,64 @@
     <channel>
         <title>DBMetersApp</title>
         <item>
+            <title>1.0.13</title>
+            <pubDate>Fri, 24 Jul 2026 11:41:04 +0200</pubDate>
+            <sparkle:version>1.0.13</sparkle:version>
+            <sparkle:shortVersionString>1.0.13</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.0.13
+
+Nowy, ujednolicony instalator — bez zmian w samym pomiarze.
+
+### Jeden instalator, trzy niezależne wybory
+
+Zamiast osobnych plików do ręcznego przeciągania, `dB-Meters-Installer-1.0.13.pkg`
+pokazuje ekran, w którym zaznaczasz dokładnie to, czego potrzebujesz:
+
+- **dB Meters** — sama aplikacja, do pomiaru przez Core Audio (np. Pro Tools
+  Audio Bridge). Wystarczy, jeśli nie potrzebujesz nic więcej.
+- **Wtyczki VST3 + AU** — tap instalowany bezpośrednio na ścieżce w DAW-ie.
+  AAX nie jest jeszcze dostępny.
+- **Sterownik BlackHole 128ch** — opcjonalne, dedykowane 128-kanałowe
+  urządzenie Core Audio, jeśli nie chcesz opierać się na moście Pro Tools.
+
+Każdy z trzech elementów można zaznaczyć niezależnie — jedno hasło
+administratora obsługuje cały wybór. Instalator jest podpisany certyfikatem
+Developer ID Installer i notaryzowany przez Apple, tak samo rygorystycznie
+jak sama aplikacja.
+
+Poprzednie sposoby instalacji zostają: aplikacja nadal aktualizuje się sama
+przez Sparkle, a osobny zip z wtyczkami jest nadal dostępny dla kogoś, kto
+woli przeciągnąć ręcznie albo zainstalować przez skrypt.
+
+### Uczciwie o sterowniku BlackHole
+
+To komponent open-source (GPL-3.0, © Existential Audio Inc.,
+github.com/ExistentialAudio/BlackHole) w wersji 128-kanałowej, zbudowany
+oficjalnym skryptem tego projektu i podpisany naszym certyfikatem przed
+spakowaniem. Po jego instalacji system wymaga restartu (albo wylogowania),
+zanim urządzenie się pojawi — instalator o tym informuje.
+
+### Stan weryfikacji — bez zaokrąglania
+
+- **Zweryfikowane:** cały łańcuch instalatora (trzy komponenty, podpis,
+  notaryzacja, stemplowanie) sprawdzony na realnych, zbudowanych plikach
+  przed wydaniem — notaryzacja Apple zwróciła Accepted. 438 testów
+  automatycznych aplikacji bez zmian (ten release nie dotyka kodu Swift,
+  wyłącznie pakowanie).
+- Wtyczki i sterownik BlackHole **nie aktualizują się automatycznie** razem
+  z aplikacją — uruchom instalator ponownie po aktualizacji, jeśli chcesz
+  odświeżyć któryś z nich.
+- Wtyczki nadal nie zostały potwierdzone w żywym hoście DAW.
+
+### Znane ograniczenie aktualizacji (bez zmian)
+
+Sparkle aktualizuje tylko aplikację.
+]]></description>
+            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.13/dB-Meters-1.0.13.zip" length="3157649" type="application/octet-stream" sparkle:edSignature="KjPLb7o4GzQHCd379ETvsfNjcZ9ukQ1TgmbE+J3yZ/obBPwQkUO7Cc5sPXXpEjqNrYeITt7zxOt2VLeInoMABg=="/>
+        </item>
+        <item>
             <title>1.0.12</title>
             <pubDate>Fri, 24 Jul 2026 10:47:40 +0200</pubDate>
             <sparkle:version>1.0.12</sparkle:version>
@@ -88,47 +146,6 @@ Sparkle aktualizuje tylko aplikację. Wtyczki instaluj ponownie z
 `dB-Meters-Plugins-1.0.11.zip`.
 ]]></description>
             <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.11/dB-Meters-1.0.11.zip" length="3157343" type="application/octet-stream" sparkle:edSignature="wKXKJzq3kZaczYLIUa48pShSrBLKSKlFrneyZoSGf8t0GKXIKKF+Ax60Hcr5uorjwJnKBI4Xn+SsMT9Cezr9DQ=="/>
-        </item>
-        <item>
-            <title>1.0.10</title>
-            <pubDate>Thu, 23 Jul 2026 01:31:46 +0200</pubDate>
-            <sparkle:version>1.0.10</sparkle:version>
-            <sparkle:shortVersionString>1.0.10</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.0.10
-
-Drobna korekta zgodności LRA — dokładnie wg implementacji referencyjnej.
-
-### LRA liczony metodą referencyjną EBU
-
-Zakres głośności (LRA) liczy percentyle P10 i P95 rozkładu short-term
-loudness. Do tej pory używał interpolacji liniowej między próbkami; teraz używa
-**dokładnie tej samej metody indeksowania co implementacja referencyjna
-libebur128** (nearest-rank), na której opiera się większość profesjonalnych
-mierników i weryfikatorów EBU R128.
-
-W praktyce różnica na realnym materiale jest **poniżej 0,1 LU** — to porządkowa
-zgodność z referencją, nie zmiana odczytu, którą byś zauważył. Bramkowanie
-(−70 LUFS / −20 LU), okno 3 s i próbkowanie 10 Hz pozostają bez zmian. Panel
-Compliance w Ustawieniach odnotowuje teraz zgodność z metodą libebur128
-(uczciwie zaznaczając, że nie testowaliśmy wobec płatnego, oficjalnego zestawu
-wektorów EBU).
-
-### Stan weryfikacji — bez zaokrąglania
-
-- **Zweryfikowane:** 419 testów automatycznych (0 błędów), w tym wektory
-  referencyjne o ręcznie policzonym wyniku (P10/P95/LRA). Pozostałe mierniki
-  nietknięte; wydajność i niezmienność względem odświeżania (z 1.0.7/1.0.9)
-  zachowane.
-- Wtyczki VST3/AU nadal nie potwierdzone w żywym hoście DAW.
-
-### Znane ograniczenie aktualizacji (bez zmian)
-
-Sparkle aktualizuje tylko aplikację. Wtyczki instaluj ponownie z
-`dB-Meters-Plugins-1.0.10.zip`.
-]]></description>
-            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.10/dB-Meters-1.0.10.zip" length="3138990" type="application/octet-stream" sparkle:edSignature="0L9ahyHX427YbD4b8qSEpeVq2aZRvAK7T0F5h8I0JA0oAOswsePNp3GyYuHCQ5WBm4kDJXDndDNDC/QoSW7iDA=="/>
         </item>
     </channel>
 </rss>
