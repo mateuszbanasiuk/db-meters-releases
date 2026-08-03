@@ -3,6 +3,93 @@
     <channel>
         <title>DBMetersApp</title>
         <item>
+            <title>1.1.0</title>
+            <pubDate>Mon, 03 Aug 2026 20:02:55 +0200</pubDate>
+            <sparkle:version>1.1.0</sparkle:version>
+            <sparkle:shortVersionString>1.1.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.1.0
+
+Największa aktualizacja od premiery: grupy kanałów, kolory tracków, uczciwsza
+semantyka True Peak i gruntowny lifting każdego widoku — plus duża poprawka
+wydajności.
+
+### Grupy kanałów (GROUPS)
+
+Zaznacz kanały w **Settings ▸ Label Channels…**, nadaj grupie nazwę (np.
+„smyczki") — mierniki grupy przysuwają się do siebie i **stykają**, z nazwą
+grupy pod klastrem. Działa w widoku głównym i Compact; kolejność wewnątrz
+grupy nadal zmienisz przeciąganiem. Usunięcie grupy przywraca dokładnie
+poprzedni układ. Jeden kanał należy do najwyżej jednej grupy.
+
+### Kolory numerów tracków
+
+W tym samym arkuszu każdy kanał ma teraz wybór koloru numeru z podstawowej
+palety (9 pozycji). Zaznacz wiele kanałów naraz — kolor zmienia się hurtem
+dla całego zaznaczenia. Kolor widać na kółkach (widok główny, Compact) i na
+pigułkach (Dense), zapisuje się per urządzenie.
+
+### Nazwy jak w Pro Tools + edycja dwuklikiem
+
+- Nazwy dłuższe niż 5 znaków są automatycznie skracane w stylu Pro Tools
+  („Vocals" → „VOCLS") — w widoku głównym i w Compact; pełna nazwa zawsze w
+  dymku.
+- **Dwuklik w nazwę kanału** w dowolnym widoku otwiera edycję (Enter
+  zapisuje, Esc anuluje) — bez otwierania arkusza.
+- W Compact pionowe litery stoją teraz ciasno jedna pod drugą.
+
+### Czytelność i porządek w interfejsie
+
+- **Dense 128**: numery tracków w pigułkach na całą szerokość komórki,
+  stałym pogrubionym krojem — koniec z mikroskopijnymi cyframi w kółkach.
+  Dymek z parametrami po najechaniu jest zawsze na wierzchu.
+- **Widok główny**: stały, zawsze widoczny suwak przewijania na dole.
+- **Label Channels…, Routing… i Fullscreen** mieszkają teraz w jednym menu
+  **Settings** (zębatka). Naprawiony przycisk Fullscreen, który potrafił
+  być martwy zaraz po starcie.
+- Znacznik routingu to teraz sam numer w kreskowanej ramce — bez glifu „⇄".
+- Aplikacja zawsze startuje z głównym oknem mierników (system potrafił
+  zapamiętać start z samym Master Meterem).
+
+### Uczciwsza semantyka True Peak (ważne metrologicznie)
+
+Zewnętrzny audyt wykazał, że ustawienie **Peak Hold** wstrzymywało żywy
+pasek zamiast markera — dokładnie odwrotnie, niż obiecywał opis. Od 1.1.0:
+
+- żywy pasek opada od razu zgodnie z **True Peak Decay**;
+- czerwony **marker** trzyma maksimum przez wybrany czas (Off / 3 s / ∞) w
+  czasie audio i dopiero potem opada do poziomu żywego;
+- odczyty i alerty korzystają z surowego pomiaru, nigdy z kosmetyki
+  prezentacji;
+- 4× oversampling przy 44,1 kHz jest automatycznie podnoszony do 8×, żeby
+  spełnić minimum 192 kHz z ITU-R BS.1770-5 (opisane w Compliance).
+
+### Wydajność
+
+Regresja z wcześniejszych wersji rozwojowych potrafiła zająć cały rdzeń
+CPU. Po przebudowie ścieżki rysowania aplikacja przy 128 kanałach i 30 Hz
+zajmuje ~7% rdzenia, a zasłonięta — praktycznie zero.
+
+### Stan weryfikacji — bez zaokrąglania
+
+- **459 testów automatycznych, 0 porażek**; RT-safety ścieżki audio
+  dowiedzione SIL-em; każda iteracja przeszła niezależną rewizję kodu.
+- **Wtyczka VST3 została po raz pierwszy potwierdzona w żywym hoście DAW**
+  (REAPER 7.74: wykrycie, załadowanie na ścieżkę, działające mini-UI).
+  AU nadal bez potwierdzenia w hoście; AAX nadal wymaga PACE (w toku —
+  zgłoszenie do Avid Developer Connect).
+- Wtyczki i sterownik BlackHole **nie aktualizują się automatycznie** razem
+  z aplikacją — po aktualizacji uruchom instalator ponownie, jeśli chcesz
+  je odświeżyć.
+
+### Znane ograniczenie aktualizacji (bez zmian)
+
+Sparkle aktualizuje tylko aplikację.
+]]></description>
+            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.1.0/dB-Meters-1.1.0.zip" length="3306808" type="application/octet-stream" sparkle:edSignature="rHR7CUTMmXuZoTh2nbtGvm47M+RxUV2OnukzRBivudumXbBnToI1DYfQsXrP/aFFLuqvJD0fHBFlI1+yFA7HCA=="/>
+        </item>
+        <item>
             <title>1.0.13</title>
             <pubDate>Fri, 24 Jul 2026 11:41:04 +0200</pubDate>
             <sparkle:version>1.0.13</sparkle:version>
@@ -96,56 +183,6 @@ Sparkle aktualizuje tylko aplikację. Wtyczki instaluj ponownie z
 `dB-Meters-Plugins-1.0.12.zip`.
 ]]></description>
             <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.12/dB-Meters-1.0.12.zip" length="3157653" type="application/octet-stream" sparkle:edSignature="m060X3RPRuPCA+LITS9ruUvun7SDaKe17uP2/WrrrJExQLwWimg1oXng/abOmRpbQL9OB3Xj1Mp6kKiY0TFMDA=="/>
-        </item>
-        <item>
-            <title>1.0.11</title>
-            <pubDate>Thu, 23 Jul 2026 07:17:00 +0200</pubDate>
-            <sparkle:version>1.0.11</sparkle:version>
-            <sparkle:shortVersionString>1.0.11</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.0.11
-
-Płynniejsze rysowanie, opcjonalny 8× True Peak i lżejszy rdzeń.
-
-### True Peak: opcjonalny tryb 8× dla większej dokładności
-
-W Ustawieniach doszedł przełącznik oversamplingu True Peak: **4× (szybki,
-domyślny)** albo **8× (dokładniejszy)**. Domyślnie zostaje 4× — Twoje odczyty
-się nie zmieniają. Tryb 8× lepiej wyłapuje szczyty międzypróbkowe blisko górnej
-granicy pasma (mniejsze zaniżenie przy wysokich częstotliwościach), kosztem
-odrobiny CPU. Panel Compliance odnotowuje oba tryby.
-
-### Rysowanie zsynchronizowane z ekranem
-
-Odświeżanie mierników przeszło z prostego zegara na źródło zsynchronizowane z
-odświeżaniem ekranu (CADisplayLink) — obraz jest płynniejszy i lepiej trafia w
-klatki, a przy zasłoniętym oknie w ogóle nie rysuje. Regulacja częstotliwości
-odświeżania (15/30/60 Hz) działa jak dotąd. **Same wartości pomiaru się nie
-zmieniają** — od wersji 1.0.7 pomiar żyje w osobnej warstwie taktowanej czasem
-próbek, a rysowanie tylko go podgląda.
-
-### Lżejszy rdzeń
-
-Usunięto ostatecznie starą, nieużywaną już ścieżkę mierników (po przejściu na
-silnik pomiarowy w 1.0.7 leżała odłogiem). Mniej kodu na gorącej ścieżce audio,
-bez zmiany zachowania.
-
-### Stan weryfikacji — bez zaokrąglania
-
-- **Zweryfikowane:** 438 testów automatycznych (0 błędów). Tryb 4× potwierdzony
-  jako bit-w-bit identyczny z poprzednim; 8× mierzalnie bliżej wartości
-  teoretycznej przy Nyquiście; niezmienność pomiaru względem odświeżania nadal
-  bit-w-bit; ścieżka czasu rzeczywistego potwierdzona na poziomie kodu
-  maszynowego.
-- Wtyczki VST3/AU nadal nie potwierdzone w żywym hoście DAW.
-
-### Znane ograniczenie aktualizacji (bez zmian)
-
-Sparkle aktualizuje tylko aplikację. Wtyczki instaluj ponownie z
-`dB-Meters-Plugins-1.0.11.zip`.
-]]></description>
-            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.11/dB-Meters-1.0.11.zip" length="3157343" type="application/octet-stream" sparkle:edSignature="wKXKJzq3kZaczYLIUa48pShSrBLKSKlFrneyZoSGf8t0GKXIKKF+Ax60Hcr5uorjwJnKBI4Xn+SsMT9Cezr9DQ=="/>
         </item>
     </channel>
 </rss>
