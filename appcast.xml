@@ -3,6 +3,69 @@
     <channel>
         <title>DBMetersApp</title>
         <item>
+            <title>1.2.0</title>
+            <pubDate>Wed, 25 Nov 2026 22:13:50 +0100</pubDate>
+            <sparkle:version>1.2.0</sparkle:version>
+            <sparkle:shortVersionString>1.2.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.2.0
+
+Płynniejsze mierniki, czytelniejsze liczby peak i nowe opcje balistyki.
+
+### Wydajność: koniec z przycinaniem mierników
+
+Okno mierników potrafiło zająć cały rdzeń CPU, bo przy każdym odświeżeniu
+przeliczało cały układ okna, a nie tylko słupki. Po przebudowie:
+
+- **Dense 128** (pomiar: 32 kanały, 96 kHz): ok. 100 % → ok. 15 % rdzenia,
+  pamięć ok. 200 MB → ok. 65 MB;
+- **Compact** jest lżejszy dla reszty okna, ale same komórki nadal kosztują
+  ok. 30–38 % rdzenia przy 32 kanałach — to znane ograniczenie tej wersji.
+
+### Liczba nad miernikiem = przytrzymany peak
+
+W trybach z jedną liczbą (True Peak, Pro Tools Classic, VU, PPM) odczyt nad
+miernikiem pokazuje teraz tę samą wartość, na której stoi czerwony marker.
+Stoi przez czas ustawiony w **Peak Hold**, przy ∞ do **Reset Holds**, i
+zeruje się po resecie. Tryby LUFS i RMS+Peak bez zmian.
+
+### Nowe opcje w Ballistics & Speed
+
+- **Peak Hold**: 0,5 / 1 / 1,5 / 2 / 3 / 5 s / ∞.
+- **Marker Release**: *Collapse* (marker wraca skokiem do poziomu, domyślnie)
+  albo *Fall* — opadanie z prędkością 5–60 dB/s.
+- **True Peak Over Threshold**: −0,1 / −1 / −2 / −3 dBTP. Jeśli Master Meter
+  ma ustawiony niższy sufit, obowiązuje niższy.
+- Okno ustawień jest większe i pokazuje wszystkie sekcje naraz; na małych
+  ekranach się przewija.
+
+### Szybsza praca z nazwami i wskaźnikami
+
+- **Tab / Shift-Tab** przy zmianie nazwy kanału zapisuje ją i przechodzi do
+  następnego lub poprzedniego kanału — w edycji dwuklikiem i w arkuszu
+  **Label Channels…**.
+- **⌥-klik w kropkę Clip / TP Over** czyści wskaźniki na wszystkich kanałach
+  naraz; zwykły klik czyści tylko jeden kanał (widok główny i Compact).
+
+### Live Input: odzysk po przeładowaniu urządzenia
+
+Gdy sterownik (np. RAVENNA / MT VAD) przeładowywał urządzenie, mierniki
+zostawały na martwym wejściu i pokazywały ciszę. Aplikacja wykrywa to teraz
+i sama wraca do właściwego urządzenia.
+
+### Stan weryfikacji — bez zaokrąglania
+
+- **485 testów automatycznych, 0 porażek**.
+- Tryb *Fall* i Tab w widoku głównym / Compact są pokryte testami, ale nie
+  zostały potwierdzone na żywym sygnale przed wydaniem.
+- Wtyczki i sterownik BlackHole **nie aktualizują się automatycznie** razem
+  z aplikacją — po aktualizacji uruchom instalator ponownie, jeśli chcesz
+  je odświeżyć.
+]]></description>
+            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.2.0/dB-Meters-1.2.0.zip" length="3357832" type="application/octet-stream" sparkle:edSignature="QoqU6m5wUiOKN+i1E0e/uiaOOfqT/kxe4zciwqJnVucJCY38Youj/q+2TyKURXcXRQ8/D0tSaQ9AqKnB0SJcDg=="/>
+        </item>
+        <item>
             <title>1.1.0</title>
             <pubDate>Mon, 03 Aug 2026 20:02:55 +0200</pubDate>
             <sparkle:version>1.1.0</sparkle:version>
@@ -146,43 +209,6 @@ zanim urządzenie się pojawi — instalator o tym informuje.
 Sparkle aktualizuje tylko aplikację.
 ]]></description>
             <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.13/dB-Meters-1.0.13.zip" length="3157649" type="application/octet-stream" sparkle:edSignature="KjPLb7o4GzQHCd379ETvsfNjcZ9ukQ1TgmbE+J3yZ/obBPwQkUO7Cc5sPXXpEjqNrYeITt7zxOt2VLeInoMABg=="/>
-        </item>
-        <item>
-            <title>1.0.12</title>
-            <pubDate>Fri, 24 Jul 2026 10:47:40 +0200</pubDate>
-            <sparkle:version>1.0.12</sparkle:version>
-            <sparkle:shortVersionString>1.0.12</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[## dB Meters 1.0.12
-
-Drobne wzmocnienie ścieżki czasu rzeczywistego — bez zmiany wskazań.
-
-### Przełączanie oversamplingu True Peak w pełni RT-bezpieczne
-
-Opcja True Peak 8× (z 1.0.11) przełączała tablicę współczynników przez
-przypisanie tablicy Swift, co na wątku audio wiązało się z operacją zarządzania
-pamięcią (ARC). W praktyce optymalizator ją usuwał, ale poleganie na tym na
-ścieżce audio jest kruche. Teraz detektor trzyma współczynniki jako trwałe,
-surowe wskaźniki — przełączenie 4×↔8× i odczyt na próbkę są **strukturalnie
-wolne od jakichkolwiek alokacji i ARC** (potwierdzone na poziomie kodu
-maszynowego). Tryb domyślny 4× pozostaje bit w bit identyczny.
-
-Znalezione podczas przeglądu kodu zewnętrznym recenzentem.
-
-### Stan weryfikacji
-
-- **Zweryfikowane:** 438 testów automatycznych (0 błędów), w tym pin
-  bit-identyczności 4× oraz dowód zerowej alokacji/ARC w callbacku audio.
-  Żadna wartość miernika się nie zmieniła.
-- Wtyczki VST3/AU nadal nie potwierdzone w żywym hoście DAW.
-
-### Znane ograniczenie aktualizacji (bez zmian)
-
-Sparkle aktualizuje tylko aplikację. Wtyczki instaluj ponownie z
-`dB-Meters-Plugins-1.0.12.zip`.
-]]></description>
-            <enclosure url="https://github.com/mateuszbanasiuk/db-meters-releases/releases/download/v1.0.12/dB-Meters-1.0.12.zip" length="3157653" type="application/octet-stream" sparkle:edSignature="m060X3RPRuPCA+LITS9ruUvun7SDaKe17uP2/WrrrJExQLwWimg1oXng/abOmRpbQL9OB3Xj1Mp6kKiY0TFMDA=="/>
         </item>
     </channel>
 </rss>
